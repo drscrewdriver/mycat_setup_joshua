@@ -45,6 +45,7 @@ PATHERRORLOG=/mysqldata/$PORT/mysqlerror-$PORT.log
 DEFAULTSFLIE=/mysqldata/$PORT/my.cnf
 DBID=10
 MAXCON=4096
+MYSQL_MSCRIPT=/etc/init.d/mysql-$PORT
 #设置 数据库主库 预设主库id
 #确认主库binlog功能打开
 cat <<EOF >$DEFAULTSFLIE
@@ -116,7 +117,7 @@ EOF
 ###!!!!!重要需要touch出errorlog，否则不能启动
 touch $PATHERRORLOG
 #复制启动脚本目录 或/etc/init.d/ mysql为prefix 后跟端口号
-cat <<EOF >> /etc/init.d/mysql-$PORT
+cat <<EOF >>${MYSQL_MSCRIPT} /etc/init.d/mysql-$PORT
 #!/bin/sh
 ################################################
 #this scripts is created by joshua at 2017-06-09
@@ -124,13 +125,6 @@ cat <<EOF >> /etc/init.d/mysql-$PORT
 #blog:http://www.drscrewdriver.com
 ################################################
 
-#init
-port=${PORT}
-mysql_user=root
-mysql_pwd=""
-CmdPath=${CMDPATH}
-mysql_sock=${SOCKET}
-#startup function
 function_start_mysql()
 {
     if [ ! -e "${SOCKET}" ];then
@@ -183,8 +177,13 @@ esac
 EOF
 
 #启动mysql实例
+/bin/bash $MYSQL_MSCRIPT start
+
 #import
+$CMDPATH/mysql -S $SOCKET -uroot <${IMPORTSQL}
+
 #reconfig read write count
+$CMDPATH/mysql  -S $SOCKET -uroot -e ""
 
 #dump with masterdata
 
