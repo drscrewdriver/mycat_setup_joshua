@@ -21,8 +21,7 @@ preid=1000
 groupadd -g ${preid}  mysql && useradd -g mysql -u ${preid} -s /sbin/nologin mysql
 #下载与解压
 wget -O /server/tools/mysql-5.6.40.tar.gz  https://cdn.mysql.com//Downloads/MySQL-5.6/mysql-5.6.40-linux-glibc2.12-x86_64.tar.gz
-tar xf /server/tools/mysql-5.6.40.tar.gz
-find /server/tools -maxdepth 1 -type d -name "mysql*"|xargs -i mv {} /application/mysql-5.6.40
+cd /application/  && tar xf /server/tools/mysql-5.6.40.tar.gz && find . -maxdepth 1 -type d -name "mysql*"|xargs -i mv {} /application/mysql-5.6.40
 #软连接或赋值程序到PATH族目录中
 ln -s /application/mysql-5.6.40 /application/mysql
 #目录权限
