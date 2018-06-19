@@ -1,6 +1,7 @@
 #!/bin/bash
 #yum yum源预设
 #pre
+source ./conf.sh
 wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo
 wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-6.repo
 yum -y install wget vim telnet numactl libaio nmap wget vim autoconf 
@@ -14,10 +15,6 @@ mkdir /application/
 
 #如果预设id被占用则提醒，否则提示是否更换mysql用户预设id
 
-#设置默认端口为3306，默认已3306为一级实例子目录目录
-PORT=3306
-preid=1000
-#用户添加,若存在mysql用户则不创建
 
 if [ `id mysql|grep uid|wc -l` -eq 0 ] ;then
 groupadd -g ${preid}  mysql && useradd -g mysql -u ${preid} -s /sbin/nologin mysql
@@ -44,21 +41,12 @@ mkdir /mysqldata/
 chown mysql.mysql -R /mysqldata/
 #是否应该先赋值目录名字《--datadir 以及 dir
 
-DATADIR=/mysqldata/$PORT/data/
 mkdir -p ${DATADIR}
 chown mysql.mysql -R /mysqldata/
 
 #test-out
 
 #复制或生成my.cnf
-CMDPATH=/application/mysql/bin/
-DATADIRBASE=/mysqldata/${PORT}/
-SOCKET=/mysqldata/${PORT}/mysql.sock
-PATHERRORLOG=/mysqldata/${PORT}/mysqlerror-${PORT}.log
-DEFAULTSFLIE=/mysqldata/${PORT}/my.cnf
-DBID=10
-MAXCON=4096
-MYSQL_MSCRIPT=/etc/init.d/mysql-${PORT}
 #设置 数据库主库 预设主库id
 #确认主库binlog功能打开
 cat <<EOF >${DEFAULTSFLIE}
