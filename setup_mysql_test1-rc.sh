@@ -122,6 +122,7 @@ innodb_lock_wait_timeout = 120
 sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
 EOF
 cat <<EOF >>${DEFAULTSFLIE}
+[mysqld_safe]
 log-error=${PATHERRORLOG}
 pid-file=${DATADIRBASE}/${PORT}.pid
 EOF
